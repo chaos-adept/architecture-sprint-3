@@ -59,24 +59,40 @@ _просто сохранение в базу, предположение, чт
 
 Чтобы добавить ссылку в файл Readme.md, нужно использовать синтаксис Markdown. Это делают так:
 
-[c4_current_context](diagrams/c4_current_context.puml)
+[c4_current_context](diagrams/c4_context__as_is.puml)
+![C4 context as is](diagrams/images/c4_context__as_is.puml.png "C4 context as is")
 
 # Задание 2. Проектирование микросервисной архитектуры
 
 В этом задании вам нужно предоставить только диаграммы в модели C4. Мы не просим вас отдельно описывать получившиеся микросервисы и то, как вы определили взаимодействия между компонентами To-Be системы. Если вы правильно подготовите диаграммы C4, они и так это покажут.
 
-**Диаграмма контейнеров (Containers)**
+[C4 container as is](diagrams/с4_container__as_is.puml)
 
-Добавьте диаграмму.
+![C4 container as is](diagrams/images/c4_container__as_is.puml.png)
+
+[C4 container to be](diagrams/с4_container__to_be.puml)
+![C4 container to be](diagrams/images/c4_container__to_be.puml.png)
 
 **Диаграмма компонентов (Components)**
 
 Добавьте диаграмму для каждого из выделенных микросервисов.
 
+[c4_a_component_to_be](diagrams/с4_component__device_state_service__to_be.puml)
+
+![c4_a_component_to_be](diagrams/images/с4_component__device_state_service__to_be.puml.png)
+
 **Диаграмма кода (Code)**
 
 Добавьте одну диаграмму или несколько.
 
+[c4 code diagram](diagrams/c4_code_diagram.puml)
+
+![c4 code diagram](diagrams/images/c4_code_diagram.puml.png)
+
 # Задание 3. Разработка ER-диаграммы
 
 Добавьте сюда ER-диаграмму. Она должна отражать ключевые сущности системы, их атрибуты и тип связей между ними.
+
+[c4 code diagram](diagrams/er_diagram.puml)
+
+![c4 code diagram](diagrams/images/er_diagram.puml.png)

@@ -1,0 +1,31 @@
+@startuml to_be_code
+
+title "c4 code diagram"
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+class RestController {
+  +handleRequest()
+}
+
+class TelemetryPuller {
+  +pullData()
+}
+
+class CommandPublisher {
+  +publishCommand()
+}
+
+class StateService {
+  +processTelemetry()
+  +createCommand()
+  +persistState()
+}
+
+RestController --> StateService : "Create Commands / Telemetry"
+StateService --> CommandPublisher : "CreateCommands"
+TelemetryPuller --> StateService : "Process"
+GatewayAPI --> RestController : "Requests Updates"
+StateService --> DeviceStateDB : "Persist"
+
+@enduml

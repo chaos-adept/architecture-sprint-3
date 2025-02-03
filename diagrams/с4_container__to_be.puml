@@ -1,0 +1,55 @@
+@startuml container_to_be
+
+title "c4 container to be"
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Ext(Шлюз, Шлюз, "система на стороне дома")
+
+Person(Пользователь, Пользователь, "Обычный пользователь, житель дома")
+Person(Внедренец, Внедренец, "Специалист настраивающий систему")
+
+System_Boundary(WarmHouseSys, "Теплый дом") {
+    Container(GatewayAPI, GatewayAPI, "", "API Gateway")
+
+    Container(WebUI, WebUI, "nginx/react", "Веб интерфейс для администратора")
+    Container(AuthService, "AuthService", "java/sprinboot", "Сервис для авторизации")
+    Container(SmarthomeWebServiceAPI, "SmarthomeWebServiceAPI", "java/sprinboot", "ACL. Веб HTTP REST поддержка легаси интерфейса для уже существующих внедрений.")
+    Container(DeviceProvisioningService, "DeviceProvisioningService", "java/sprigboot", "Управляет регистрацией новых устройств и их удаление, регистриует токены доступа и тп")
+    Container(DeviceFrontService, "DeviceFrontService", "java/netty/mqtt", "Принимает соединения от шлюза устройств и отсылает команды")
+    Container(DeviceStateService, "DeviceStateService", "java/sprigboot", "Обновляет состояние устройств отправляет запросы на изминения состоянием")
+
+    ContainerDb(DeviceStateDB, "DeviceStateDB", "PostgreSQL", "Хранит последние состояние устройств")
+    ContainerDb(TokenRedisCache, TokenRedisCache, "redis", "Токены")
+
+    SystemQueue(TelemetryQeue, TelemetryQeue, "Входящая телеметрия температура и тп")
+    SystemQueue(CommandsQeue, CommandsQeue, "Исходящие команды, например вкл/выкл")
+
+    ContainerDb(DeviceProvisionDB, "DeviceProvisionDB", "PostgreSQL", "Хранит данные о температуре, и о состоянии реле")
+}
+
+Rel(GatewayAPI, SmarthomeWebServiceAPI, "route")
+Rel(GatewayAPI, DeviceProvisioningService, "route")
+Rel(GatewayAPI, DeviceStateService, "route")
+Rel(GatewayAPI, DeviceFrontService, "route")
+Rel_R(GatewayAPI, AuthService, "auth")
+Rel_R(AuthService, TokenRedisCache, "sync")
+
+Rel(Шлюз, GatewayAPI, "Телеметрия/Команды синхронные по старому протоколу")
+Rel(Шлюз, DeviceFrontService, "Телеметрия")
+Rel(DeviceFrontService, Шлюз, "Команды")
+Rel(WebUI, GatewayAPI, "interact")
+
+Rel(DeviceStateService, TelemetryQeue, "Read")
+Rel(DeviceStateService, CommandsQeue, "Write")
+Rel(DeviceStateService, DeviceStateDB, "sync")
+
+Rel(DeviceFrontService, TelemetryQeue, "Write")
+Rel(DeviceFrontService, CommandsQeue, "Read")
+Rel(DeviceProvisioningService, DeviceProvisionDB, "Persist")
+
+Rel(Пользователь, Шлюз, "read telemetry manage")
+Rel(Внедренец, WebUI, "manage")
+
+@end
