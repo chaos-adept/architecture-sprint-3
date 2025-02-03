@@ -1,0 +1,19 @@
+@startuml as_is
+
+title "C4 container - as is"
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+System_Ext(Шлюз, Шлюз, "система на стороне дома")
+
+System_Boundary(ТеплыйДомСис, "Теплый дом") {
+    Container(SmarthomeWebServiceAPI, "SmarthomeWebServiceAPI", "java/springboot", "Веб HTTP REST сервисы для бизнесс логики")
+    ContainerDb(db, "Database", "PostgreSQL", "Хранит данные о температуре, и о состоянии реле")
+}
+
+Rel(Шлюз, ТеплыйДомСис, "Телеметрия/Команды")
+Rel(SmarthomeWebServiceAPI, db, "Reads/Writes")
+
+
+@end

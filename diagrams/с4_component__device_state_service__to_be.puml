@@ -1,0 +1,35 @@
+@startuml to_be
+
+title "c4 diagram component - DeviceStateService"
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+
+Container(GatewayAPI, GatewayAPI, GatewayAPI)
+
+Container_Boundary(DeviceStateService, DeviceStateService) {
+    Component(RestController, RestController)
+    Component(TelemetryPuller, TelemetryPuller)
+    Component(CommandPublisher, CommandPublisher)
+    Component(StateService, StateService)
+}
+
+ComponentDb(DeviceStateDB, DeviceStateDB, PostgreSQL)
+
+Container_Boundary(Qeue, Qeue) {
+    ComponentQueue(TelemetryQeue, TelemetryQeue, techn3)
+    ComponentQueue(CommandsQeue, CommandsQeue, techn3)
+}
+
+Rel(RestController, StateService, Create Commands / Telemetry)
+
+Rel(StateService, CommandPublisher, CreateCommands)
+Rel(TelemetryPuller, StateService, Process)
+Rel(TelemetryPuller, TelemetryQeue, Pull)
+Rel(CommandPublisher, CommandsQeue, Push)
+
+Rel(GatewayAPI, RestController, Requests Updates)
+Rel(StateService, DeviceStateDB, Persist)
+
+@end
